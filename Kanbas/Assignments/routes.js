@@ -1,34 +1,39 @@
-
 import Database from "../Database/index.js";
 
-function AssignmentRoutes(app) {
+export default function AssignmentRoutes(app) {
   app.get("/api/courses/:cid/assignments", (req, res) => {
     const { cid } = req.params;
-    const assignments = Database.assignments.filter((c) => c.course === cid);
-    if (assignments) {
+    const assignments = Database.assignments.filter((a) => a.course === cid);
+    if (assignments.length > 0) {
       res.json(assignments);
     } else {
-      res.status(404).send("Course not found");
+      res.status(404).send("No assignments found for this course");
     }
   });
 
-  app.delete("/api/courses/:cid/assignments", (req, res) => {
-    try {
-      const { cid } = req.params;
-      Database.assignments = Database.assignments.filter((a) => a._id !== cid);
+  app.delete("/api/assignments/:aid", (req, res) => {
+    const { aid } = req.params;
+    const index = Database.assignments.findIndex((a) => a._id === aid);
+    if (index !== -1) {
+      Database.assignments.splice(index, 1);
       res.sendStatus(200);
-    } catch (error) {
-      res.status(404).send("Assignment delete failed");
+    } else {
+      res.status(404).send("Assignment not found");
     }
   });
-  app.put("/api/courses/:cid/assignments", (req, res) => {
-    const { cid } = req.params;
-    const newAssignment = { ...req.body };
-    const index = Database.assignments.findIndex((a) => a._id === cid);
-    Database.assignments[index] = newAssignment;
-    res.sendStatus(200);
+
+  app.put("/api/assignments/:aid", (req, res) => {
+    const { aid } = req.params;
+    const index = Database.assignments.findIndex((a) => a._id === aid);
+    if (index !== -1) {
+      Database.assignments[index] = { ...req.body, _id: aid };
+      res.sendStatus(200);
+    } else {
+      res.status(404).send("Assignment not found");
+    }
   });
-  app.post("/api/courses/:cid/assignments", (req, res) => {
+
+  app.post("/api/courses/:cid/assignments/new", (req, res) => {
     const { cid } = req.params;
     const newAssignment = {
       ...req.body,
@@ -36,8 +41,6 @@ function AssignmentRoutes(app) {
       _id: new Date().getTime().toString(),
     };
     Database.assignments.push(newAssignment);
-    res.send(newMonewAssignmentdule);
+    res.status(201).json(newAssignment);
   });
 }
-
-export default AssignmentRoutes;

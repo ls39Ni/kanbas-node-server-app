@@ -21,6 +21,7 @@ app.use(
     origin: process.env.NETLIFY_URL || "http://localhost:3000",
   })
 );
+console.log(process.env.NETLIFY_URL)
 // app.use(cors({
 //   credentials: true,
 // origin: function(origin, callback){
@@ -54,4 +55,6 @@ AssignmentRoutes(app);
 Lab5(app);
 Hello(app);
 UserRoutes(app);
-app.listen(process.env.PORT || 4000);
+app.listen(process.env.PORT || 4000, () => {
+  console.log(`Server is running on port ${process.env.PORT || 4000}`);
+});

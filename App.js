@@ -1,23 +1,40 @@
 import "dotenv/config";
 import session from "express-session";
-import express from 'express';
+import express from "express";
 import mongoose from "mongoose";
-import UserRoutes from "./Users/routes.js";
-import Hello from './Hello.js';
-import Lab5 from './Lab5/index.js';
-import CourseRoutes from './Kanbas/Courses/routes.js';
+import UserRoutes from "./Kanbas/Users/routes.js";
+import Hello from "./Hello.js";
+import Lab5 from "./Lab5/index.js";
+import CourseRoutes from "./Kanbas/Courses/routes.js";
 import ModuleRoutes from "./Kanbas/Modules/routes.js";
-import AssignmentRoutes from './Kanbas/Assignments/routes.js';
-import cors from "cors"
+import AssignmentRoutes from "./Kanbas/Assignments/routes.js";
+import cors from "cors";
 
-const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb+srv://rushanliang:kanbasproject@kanbas.biocdox.mongodb.net/Kanbas"
+const CONNECTION_STRING =
+  process.env.MONGO_CONNECTION_STRING ||
+  "mongodb://127.0.0.1:27017/kanbas";
 mongoose.connect(CONNECTION_STRING);
-const app = express()
-
+const app = express();
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.NETLIFY_URL || "http://localhost:3000",
+  })
+);
+// app.use(cors({
+//   credentials: true,
+// origin: function(origin, callback){
+//   const allowedOrigins = [process.env.NETLIFY_URL, 'http://localhost:3000'];
+//   if (!origin || allowedOrigins.includes(origin)) {
+//     callback(null, true);
+//   } else {
+//     callback(new Error('Not allowed by CORS'));
+//   }
+// }
+// }));
 
 const sessionOptions = {
-  // secret: process.env.SESSION_SECRET || "Kanbas",
-  secret : 'super session secret',
+  secret: process.env.SESSION_SECRET || "kanbas",
   resave: false,
   saveUninitialized: false,
 };
@@ -29,26 +46,12 @@ if (process.env.NODE_ENV !== "development") {
     domain: process.env.NODE_SERVER_DOMAIN,
   };
 }
-app.use(session(sessionOptions)
-);
+app.use(session(sessionOptions));
 app.use(express.json()); // Do all work after this line
-app.use(cors({
-  credentials: true,
-  origin: function(origin, callback){
-    const allowedOrigins = [process.env.NETLIFY_URL, 'http://localhost:3000'];
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
-}));
-
+CourseRoutes(app);
+ModuleRoutes(app);
+AssignmentRoutes(app);
+Lab5(app);
+Hello(app);
 UserRoutes(app);
-Hello(app)
-CourseRoutes(app)
-ModuleRoutes(app)
-AssignmentRoutes(app)
-Lab5(app)
-app.listen(process.env.PORT || 4000)
-
+app.listen(process.env.PORT || 4000);

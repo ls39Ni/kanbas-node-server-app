@@ -12,15 +12,18 @@ import session from "express-session";
 import "dotenv/config";
 
 const CONNECTION_STRING =
-  process.env.MONGO_CONNECTION_STRING || "mongodb+srv://rushanliang:kanbasproject@kanbas.biocdox.mongodb.net/?retryWrites=true&w=majority&appName=Kanbas";
+  process.env.MONGO_CONNECTION_STRING ||
+  "mongodb+srv://rushanliang:kanbasproject@Kanbas.biocdox.mongodb.net";
 mongoose.connect(CONNECTION_STRING);
 
-const app = express()
-app.use(cors({
-   credentials: true,
-   origin: process.env.NETLIFY_URL || "http://localhost:3000",
- })
+const app = express();
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.NETLIFY_URL || "http://localhost:3000",
+  })
 );
+app.use(express.json());
 const sessionOptions = {
   secret: process.env.SESSION_SECRET || "kanbas",
   resave: false,
@@ -35,12 +38,13 @@ if (process.env.NODE_ENV !== "development") {
   };
 }
 app.use(session(sessionOptions));
-app.use(express.json()); // do all your work after this line
+UserRoutes(app);
 CourseRoutes(app);
 ModuleRoutes(app);
 AssignmentRoutes(app);
 Lab5(app);
 Hello(app);
-UserRoutes(app);
 
-app.listen(process.env.PORT || 4000);
+app.listen(process.env.PORT || 4000, () => {
+  console.log(`Server is running on port ${process.env.PORT || 4000}`);
+});

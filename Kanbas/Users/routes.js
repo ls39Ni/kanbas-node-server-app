@@ -5,7 +5,11 @@ export default function UserRoutes(app) {
     const user = await dao.createUser(req.body);
     res.json(user);
   };
-  const deleteUser = async (req, res) => { };
+  const deleteUser = async (req, res) => {
+    const status = await dao.deleteUser(req.params.userId);
+    res.json(status);
+  };
+  app.delete("/api/users/:userId", deleteUser);
   const findAllUsers = async (req, res) => {
     const { role, name } = req.query;
     if (role) {
@@ -14,10 +18,10 @@ export default function UserRoutes(app) {
       return;
     }
     if (name) {
-        const users = await dao.findUsersByPartialName(name);
-        res.json(users);
-        return;
-      }  
+      const users = await dao.findUsersByPartialName(name);
+      res.json(users);
+      return;
+    }
     const users = await dao.findAllUsers();
     res.json(users);
   };
@@ -34,8 +38,7 @@ export default function UserRoutes(app) {
   const signup = async (req, res) => {
     const user = await dao.findUserByUsername(req.body.username);
     if (user) {
-      res.status(400).json(
-        { message: "Username already taken" });
+      res.status(400).json({ message: "Username already taken" });
       return;
     }
     const currentUser = await dao.createUser(req.body);
@@ -47,7 +50,7 @@ export default function UserRoutes(app) {
     const currentUser = await dao.findUserByCredentials(username, password);
     if (currentUser) {
       req.session["currentUser"] = currentUser;
-    res.json(currentUser);
+      res.json(currentUser);
     } else {
       res.status(401).json({ message: "Unable to login. Try again later." });
     }

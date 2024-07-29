@@ -10,7 +10,7 @@ import ModuleRoutes from "./Kanbas/Modules/routes.js";
 import AssignmentRoutes from './Kanbas/Assignments/routes.js';
 import cors from "cors"
 
-const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb+srv://rushanliang:<password>@kanbas.biocdox.mongodb.net/?retryWrites=true&w=majority&appName=Kanbas"
+const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb+srv://rushanliang:<password>@kanbas.biocdox.mongodb.net/kanbas"
 mongoose.connect(CONNECTION_STRING);
 const app = express()
 app.use(cors({
@@ -26,7 +26,7 @@ app.use(cors({
 }));
 app.use(express.json()); // Do all work after this line
 const sessionOptions = {
-  secret: process.env.SESSION_SECRET || "kanbas",
+  secret: process.env.SESSION_SECRET || "Kanbas",
   resave: false,
   saveUninitialized: false,
 };

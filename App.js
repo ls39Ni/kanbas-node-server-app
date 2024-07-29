@@ -10,23 +10,14 @@ import ModuleRoutes from "./Kanbas/Modules/routes.js";
 import AssignmentRoutes from './Kanbas/Assignments/routes.js';
 import cors from "cors"
 
-const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb+srv://rushanliang:<password>@kanbas.biocdox.mongodb.net/kanbas"
+const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb+srv://rushanliang:kanbasproject@kanbas.biocdox.mongodb.net/Kanbas"
 mongoose.connect(CONNECTION_STRING);
 const app = express()
-app.use(cors({
-  credentials: true,
-  origin: function(origin, callback){
-    const allowedOrigins = [process.env.NETLIFY_URL, 'http://localhost:3000'];
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
-}));
-app.use(express.json()); // Do all work after this line
+
+
 const sessionOptions = {
-  secret: process.env.SESSION_SECRET || "Kanbas",
+  // secret: process.env.SESSION_SECRET || "Kanbas",
+  secret : 'super session secret',
   resave: false,
   saveUninitialized: false,
 };
@@ -40,6 +31,18 @@ if (process.env.NODE_ENV !== "development") {
 }
 app.use(session(sessionOptions)
 );
+app.use(express.json()); // Do all work after this line
+app.use(cors({
+  credentials: true,
+  origin: function(origin, callback){
+    const allowedOrigins = [process.env.NETLIFY_URL, 'http://localhost:3000'];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
 UserRoutes(app);
 Hello(app)

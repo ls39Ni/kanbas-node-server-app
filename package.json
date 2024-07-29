@@ -3,10 +3,10 @@
   "name": "kanbas-node-server-app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "App.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node App.js"
+    "start": "nodemon App.js"
   },
   "repository": {
     "type": "git",
@@ -19,11 +19,12 @@
   },
   "homepage": "https://github.com/ls39Ni/kanbas-node-server-app#readme",
   "dependencies": {
-    "axios": "^1.6.8",
+    "axios": "^1.7.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.19.1",
+    "express": "^4.19.2",
     "express-session": "^1.18.0",
-    "mongoose": "^8.2.4"
+    "mongoose": "^8.5.1"
   }
+  
 }

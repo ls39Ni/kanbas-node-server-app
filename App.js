@@ -13,7 +13,7 @@ import "dotenv/config";
 
 const CONNECTION_STRING =
   process.env.MONGO_CONNECTION_STRING ||
-  "mongodb+srv://rushanliang:kanbasproject@Kanbas.biocdox.mongodb.net";
+  "mongodb+srv://rushanliang:kanbasproject@kanbas.biocdox.mongodb.net/kanbas";
 mongoose.connect(CONNECTION_STRING);
 
 const app = express();

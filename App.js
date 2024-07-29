@@ -7,7 +7,7 @@ import AssignmentRoutes from "./Kanbas/Assignments/routes.js";
 import cors from "cors";
 import mongoose from "mongoose";
 import "dotenv/config";
-import UserRoutes from "./Kanbas/Users/routes.js";
+import UserRoutes from "./Users/routes.js";
 import session from "express-session";
 import "dotenv/config";
 
